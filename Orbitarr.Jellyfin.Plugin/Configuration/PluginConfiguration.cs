@@ -8,7 +8,7 @@ namespace Orbitarr.Jellyfin.Plugin.Configuration
     public class PluginConfiguration : BasePluginConfiguration
     {
         /// <summary>
-        /// Gets or sets the API base URL.
+        /// Gets or sets the API base URL (hardcoded).
         /// </summary>
         public string ApiBaseUrl { get; set; } = "http://192.168.1.12:8080";
 
