@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Orbitarr Episode Tracker</title>
+</head>
+<body>
+    <div id="OrbitarrConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <form id="OrbitarrConfigForm">
+                    <div class="verticalSection">
+                        <h2>Orbitarr Episode Tracker Configuration</h2>
+                        <p>Configure the settings for tracking watched episodes.</p>
+                    </div>
+
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label>
+                            <input type="checkbox" is="emby-checkbox" id="Enabled" />
+                            <span>Enable Episode Tracking</span>
+                        </label>
+                        <div class="fieldDescription">
+                            Enable or disable sending episode watch events to Orbitarr.
+                        </div>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ApiBaseUrl">API Base URL</label>
+                        <input id="ApiBaseUrl" type="text" is="emby-input" />
+                        <div class="fieldDescription">
+                            The base URL of your Orbitarr API (e.g., http://192.168.1.12:8080)
+                        </div>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="UserId">User ID</label>
+                        <input id="UserId" type="text" is="emby-input" />
+                        <div class="fieldDescription">
+                            The UUID of the user to track episodes for (e.g., 123e4567-e89b-12d3-a456-426614174000)
+                        </div>
+                    </div>
+
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var OrbitarrConfig = {
+                pluginUniqueId: 'a8b9c1d2-e3f4-5678-9012-34567890abcd'
+            };
+
+            document.getElementById('OrbitarrConfigPage').addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(OrbitarrConfig.pluginUniqueId).then(function (config) {
+                    document.getElementById('Enabled').checked = config.Enabled;
+                    document.getElementById('ApiBaseUrl').value = config.ApiBaseUrl;
+                    document.getElementById('UserId').value = config.UserId;
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            document.getElementById('OrbitarrConfigForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                Dashboard.showLoadingMsg();
+
+                ApiClient.getPluginConfiguration(OrbitarrConfig.pluginUniqueId).then(function (config) {
+                    config.Enabled = document.getElementById('Enabled').checked;
+                    config.ApiBaseUrl = document.getElementById('ApiBaseUrl').value;
+                    config.UserId = document.getElementById('UserId').value;
+
+                    ApiClient.updatePluginConfiguration(OrbitarrConfig.pluginUniqueId, config).then(function (result) {
+                        Dashboard.processPluginConfigurationUpdateResult(result);
+                    });
+                });
+
+                return false;
+            });
+        </script>
+    </div>
+</body>
+</html>

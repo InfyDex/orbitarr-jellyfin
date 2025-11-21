@@ -1,0 +1,64 @@
+name: Build and Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore Orbitarr.Jellyfin.Plugin/Orbitarr.Jellyfin.Plugin.csproj
+      
+    - name: Build plugin
+      run: dotnet build Orbitarr.Jellyfin.Plugin/Orbitarr.Jellyfin.Plugin.csproj -c Release --no-restore
+      
+    - name: Create package directory
+      run: |
+        New-Item -Path "package" -ItemType Directory -Force
+        Copy-Item -Path "Orbitarr.Jellyfin.Plugin/bin/Release/net8.0/Orbitarr.Jellyfin.Plugin.dll" -Destination "package/"
+        
+    - name: Create zip
+      run: Compress-Archive -Path "package/*" -DestinationPath "Orbitarr.Jellyfin.Plugin.zip"
+      
+    - name: Calculate checksum
+      id: checksum
+      run: |
+        $hash = (Get-FileHash -Path "Orbitarr.Jellyfin.Plugin.zip" -Algorithm MD5).Hash
+        echo "md5=$hash" >> $env:GITHUB_OUTPUT
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: Orbitarr.Jellyfin.Plugin.zip
+        body: |
+          ## Orbitarr Episode Tracker Plugin
+          
+          ### Features
+          - Automatically track watched episodes to Orbitarr API
+          - Triggers on playback completion (90%+)
+          - Triggers on manual marking as watched
+          - Configurable API endpoint and user ID
+          
+          ### Installation
+          Add this repository to Jellyfin:
+          ```
+          https://raw.githubusercontent.com/${{ github.repository }}/main/manifest.json
+          ```
+          
+          **Checksum (MD5):** ${{ steps.checksum.outputs.md5 }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
