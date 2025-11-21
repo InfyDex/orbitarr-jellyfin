@@ -21,8 +21,6 @@ A Jellyfin plugin that automatically tracks episode watch events and sends them 
 4. Enter:
    - **Repository Name:** `Orbitarr Plugins`
    - **Repository URL:** `https://raw.githubusercontent.com/InfyDex/orbitarr-jellyfin/main/manifest.json`
-   
-   *(Replace `InfyDex` with the actual GitHub username)*
 
 5. Click **Save**
 6. Go to **Catalog** tab

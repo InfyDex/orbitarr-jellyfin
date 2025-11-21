@@ -12,7 +12,7 @@
                 "changelog": "Initial release\n- Track episodes on playback completion\n- Track episodes on manual marking\n- Configurable API endpoint and user ID\n- Uses TMDB/TVDB IDs",
                 "targetAbi": "10.9.0.0",
                 "sourceUrl": "https://github.com/InfyDex/orbitarr-jellyfin/releases/download/v1.0.0/Orbitarr.Jellyfin.Plugin.zip",
-                "checksum": "0876ba993f2c84ea578fb583111ba96f",
+                "checksum": "4e19fd72d3d480e87fa088c1bd498554",
                 "timestamp": "2025-11-22T00:00:00Z"
             }
         ]
