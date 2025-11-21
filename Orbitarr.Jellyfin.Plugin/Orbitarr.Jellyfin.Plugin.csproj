@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Configuration\configPage.html" />
+    <EmbeddedResource Include="Configuration\configPage.html">
+      <LogicalName>Orbitarr.Jellyfin.Plugin.Configuration.configPage.html</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
